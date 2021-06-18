@@ -18,10 +18,10 @@ class WebSecurityConfig {
     fun securityWebFilterChain(
         http: ServerHttpSecurity,
         jwtAuthenticationManager: ReactiveAuthenticationManager,
-        jwtAuthenticationConverter: ServerAuthenticationConverter
+        securityContextRepository: SecurityContextRepository
     ): SecurityWebFilterChain {
-        val authenticationWebFilter = AuthenticationWebFilter(jwtAuthenticationManager)
-        authenticationWebFilter.setServerAuthenticationConverter(jwtAuthenticationConverter)
+//        val authenticationWebFilter = AuthenticationWebFilter(jwtAuthenticationManager)
+//        authenticationWebFilter.setServerAuthenticationConverter(jwtAuthenticationConverter)
 
         return http
             .cors()
@@ -38,7 +38,9 @@ class WebSecurityConfig {
             .and()
             .formLogin().disable()
             .logout().disable()
-            .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+            .authenticationManager(jwtAuthenticationManager)
+            .securityContextRepository(securityContextRepository)
+//            .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
             .build()
     }
 

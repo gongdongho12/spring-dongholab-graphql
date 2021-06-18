@@ -16,6 +16,7 @@
 
 package com.dongholab.graphql
 
+import com.dongholab.graphql.config.CustomBeanNameGenerator
 import com.dongholab.graphql.directives.CustomDirectiveWiringFactory
 import com.dongholab.graphql.exceptions.CustomDataFetcherExceptionHandler
 import com.dongholab.graphql.execution.CustomDataFetcherFactoryProvider
@@ -30,8 +31,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories
+import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories
 
 @SpringBootApplication
+@EnableR2dbcRepositories(basePackages = ["com.dongholab.graphql.repository.reactive"])
+@EnableJpaRepositories(basePackages = ["com.dongholab.graphql.repository.jpa"])
+@ComponentScan(nameGenerator = CustomBeanNameGenerator::class)
 class Application {
 
     @Bean

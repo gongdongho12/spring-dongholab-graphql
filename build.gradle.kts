@@ -18,6 +18,8 @@ plugins {
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("com.expediagroup:graphql-kotlin-spring-server:$graphqlVersion")
     implementation("com.expediagroup:graphql-kotlin-hooks-provider:$graphqlVersion")
 //    implementation("org.springframework.boot:spring-boot-starter-web")
@@ -39,6 +41,10 @@ dependencies {
         // 사용하면 안됨.
         exclude("org.springframework.boot", "spring-boot-starter-web")
     }
+
+    implementation("org.mariadb:r2dbc-mariadb:1.0.1")
+    implementation("mysql:mysql-connector-java")
+
     implementation("io.github.classgraph:classgraph:4.8.103")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
