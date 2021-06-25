@@ -1,14 +1,11 @@
 package com.dongholab.graphql.service
 
-import com.dongholab.graphql.domain.account.UserPrincipal
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.security.KeyPair
 import java.time.Duration
@@ -27,63 +24,68 @@ class JWTSigner {
     val keyPair: KeyPair = Keys.keyPairFor(SignatureAlgorithm.RS256)
 
     fun createJwt(userId: String): String {
+        val now = Date()
         return Jwts.builder()
-            .signWith(keyPair.private, SignatureAlgorithm.RS256)
-            .setSubject(userId)
+            .setClaims(
+                Jwts.claims().setSubject(userId)
+                    .also {
+                        it["role"] = userDetailService.getUserById(userId)?.roleType
+                        it["password"] = userDetailService.getUserById(userId)?.password
+                    }
+            )
             .setIssuer("identity")
-            .setExpiration(Date.from(Instant.now().plus(Duration.ofMinutes(15))))
-            .setIssuedAt(Date.from(Instant.now()))
+//            .setExpiration(Date.from(now.plus(Duration.ofMinutes(15))))
+            .setExpiration(Date(now.time + TOKEN_TTL))
+            .setIssuedAt(now)
+            .signWith(keyPair.private, SignatureAlgorithm.RS256)
             .compact()
     }
 
-    fun getAuthentication(token: String?): Authentication =
-        userDetailService.loadUserByUsername(this.getUserId(token)).let {
-            UsernamePasswordAuthenticationToken(it, it.password, it.authorities)
-        }
-
-    fun getUserId(token: String?): String =
-        Jwts.parserBuilder()
-            .setSigningKey(keyPair.public)
-            .build()
-            .parseClaimsJws(token)
-            .body
-            .subject
-
-    fun createToken(authentication: Authentication?): String =
-        Jwts.builder().let {
-            val now = Date()
-
-            // 전달받은 인증 정보로부터 principal 값을 가져옵니다.
-            val userPrincipal = authentication?.principal as UserPrincipal
-
-            // 토큰 빌더를 통해서 토큰을 생성해줍니다.
-            it.setClaims(
-                // username = id 입니다.(PK)
-                Jwts.claims().setSubject(userPrincipal.username)
-                    .also { claims ->
-                        claims["role"] = userPrincipal.authorities.first()
-                    }
-            )
-                .setIssuedAt(now)
-                .setExpiration(Date(now.time + TOKEN_TTL))
-                .signWith(keyPair.private, SignatureAlgorithm.RS256)
-                .compact()
-        }!!
+//    fun getUserId(token: String?): String =
+//        Jwts.parserBuilder()
+//            .setSigningKey(keyPair.public)
+//            .build()
+//            .parseClaimsJws(token)
+//            .body
+//            .subject
+//
+//    fun createToken(authentication: Authentication?): String =
+//        Jwts.builder().let {
+//            val now = Date()
+//
+//            // 전달받은 인증 정보로부터 principal 값을 가져옵니다.
+//            val userPrincipal = authentication?.principal as UserPrincipal
+//
+//            // 토큰 빌더를 통해서 토큰을 생성해줍니다.
+//            it.setClaims(
+//                // username = id 입니다.(PK)
+//                Jwts.claims().setSubject(userPrincipal.username)
+//                    .also { claims ->
+//                        claims["role"] = userPrincipal.authorities.first()
+//                    }
+//            )
+//                .setIssuedAt(now)
+//                .setExpiration(Date(now.time + TOKEN_TTL))
+//                .signWith(keyPair.private, SignatureAlgorithm.RS256)
+//                .compact()
+//        }!!
 
     /**
      * Validate the JWT where it will throw an exception if it isn't valid.
      */
     fun validateJwt(jwt: String): Jws<Claims>? {
+        println("validateJwt $jwt")
+
         val claims: Jws<Claims> = Jwts.parserBuilder()
             .setSigningKey(keyPair.public)
             .build()
             .parseClaimsJws(jwt)
 
         return claims.let {
-            if (it.body.expiration.before(Date())) {
-                return it
+            return if (it.body.expiration.before(Date())) {
+                it
             } else {
-                return null
+                null
             }
         }
     }

@@ -1,5 +1,7 @@
 package com.dongholab.graphql.config
 
+import com.dongholab.graphql.service.DongholabUserDetailService
+import com.dongholab.graphql.service.JWTSigner
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -16,6 +18,12 @@ class SecurityContextRepository : ServerSecurityContextRepository {
     @Autowired
     lateinit var jwtAuthenticationManager: JwtAuthenticationManager
 
+    @Autowired
+    lateinit var dongholabUserDetailService: DongholabUserDetailService
+
+    @Autowired
+    lateinit var jwtSigner: JWTSigner
+
     override fun save(swe: ServerWebExchange?, sc: SecurityContext?): Mono<Void> {
         throw UnsupportedOperationException("Not supported yet.")
     }
@@ -24,7 +32,11 @@ class SecurityContextRepository : ServerSecurityContextRepository {
         return Mono.justOrEmpty(swe.request.headers.getFirst(HttpHeaders.AUTHORIZATION))
             .filter { authHeader: String -> authHeader.startsWith("Bearer ") }
             .flatMap { authHeader: String ->
+                println("authHeader $authHeader")
                 val authToken = authHeader.substring(7)
+                println("authToken $authToken")
+
+                jwtSigner.validateJwt(authToken)?.body?.subject
                 val auth: Authentication = UsernamePasswordAuthenticationToken(authToken, authToken)
                 jwtAuthenticationManager?.authenticate(auth)?.map { SecurityContextImpl() }
             }
