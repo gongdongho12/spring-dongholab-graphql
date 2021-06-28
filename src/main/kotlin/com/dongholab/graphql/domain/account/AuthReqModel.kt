@@ -1,8 +1,8 @@
 package com.dongholab.graphql.domain.account
 
 data class AuthReqModel(
-    val id: String,
+    override val id: String,
+    override val password: String,
     val name: String?,
-    val password: String,
     val roleType: String?
-)
+): AuthLoginModel(id, password)
