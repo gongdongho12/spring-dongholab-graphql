@@ -45,8 +45,8 @@ class DocumentConfig: WebFluxConfigurer {
     private fun getApiInfo(): ApiInfo {
         val contact = Contact("Dongho Gang", "https://github.com/gongdongho12", "dongho@storelink.io")
         return ApiInfoBuilder()
-            .title("Dongholab Sample Api")
-            .description("api for dongholab service")
+            .title("Dongholab Graphql Api")
+            .description("graphql api for dongholab service")
             .version("1.0.0")
             .contact(contact)
             .build()
