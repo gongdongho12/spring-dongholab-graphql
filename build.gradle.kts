@@ -6,13 +6,14 @@ val swaggerVersion = "3.0.0"
 val graphqlVersion = "4.1.1"
 
 plugins {
-    id("org.springframework.boot") version "2.4.4"
+    id("org.springframework.boot") version "2.5.2"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("com.expediagroup.graphql") version "4.1.1"
     war
     java
-    kotlin("jvm") version "1.4.31"
-    kotlin("plugin.spring") version "1.4.31"
+    kotlin("jvm") version "1.5.20"
+    kotlin("plugin.spring") version "1.5.20"
+    kotlin("plugin.jpa") version "1.5.20"
 }
 
 java.sourceCompatibility = JavaVersion.VERSION_1_8
