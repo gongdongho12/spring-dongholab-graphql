@@ -34,6 +34,8 @@ graphql:
     # Send a ka message every 1000 ms (1 second)
     keepAliveInterval: 1000
 
+server:
+  port: 8080
 ---
 
 spring:
