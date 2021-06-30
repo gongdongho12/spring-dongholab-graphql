@@ -5,13 +5,14 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
-class UserPrincipal(
+class DonghoLabUserPrincipal(
     private val id: String,
     val name: String,
     private val password: String,
     private val authorities: Collection<GrantedAuthority>
 ): UserDetails {
-    constructor(user: User): this(user.id, user.name, user.password, listOf(SimpleGrantedAuthority(user.roleType.name)))
+    constructor(user: User): this(user.id, user.name, user.password, listOf(SimpleGrantedAuthority(user.roleType.toString())))
+    constructor(authReqModel: AuthReqModel): this(authReqModel.id, authReqModel.name, authReqModel.password, listOf(SimpleGrantedAuthority(authReqModel.roleType)))
 
     override fun getAuthorities() = this.authorities
 
