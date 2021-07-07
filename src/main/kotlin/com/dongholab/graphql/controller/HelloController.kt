@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RestController
 class HelloController {
     @GetMapping
     fun test(): String {
-        return "index"
+        return "Hello World!"
     }
 }
