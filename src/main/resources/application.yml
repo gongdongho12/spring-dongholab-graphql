@@ -9,8 +9,6 @@ spring:
     multipart:
       max-file-size: 20MB
       max-request-size: 20MB
-  batch:
-    initialize-schema: never
 
 springdoc:
   swagger-ui:
@@ -43,7 +41,6 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/graphql?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
     username: root
     password: dongho135
-    initialization-mode: never
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       connection-test-query: SELECT 1
