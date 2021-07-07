@@ -26,6 +26,8 @@ class SecurityConfig {
                 .permitAll()
             .pathMatchers("/**").permitAll()
             .and()
+            .cors()
+            .and()
             .addFilterAt(
                 AuthenticationWebFilter(jwtAuthenticationManager).apply {
                     setServerAuthenticationConverter(jwtAuthenticationConverter)
