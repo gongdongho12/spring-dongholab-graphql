@@ -26,7 +26,6 @@ dependencies {
     implementation("com.expediagroup:graphql-kotlin-spring-server:$graphqlVersion")
     implementation("com.expediagroup:graphql-kotlin-hooks-provider:$graphqlVersion")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
