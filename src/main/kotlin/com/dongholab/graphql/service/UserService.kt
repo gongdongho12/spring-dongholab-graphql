@@ -1,6 +1,6 @@
 package com.dongholab.graphql.service
 
-import com.dongholab.graphql.domain.account.AuthBase
+import com.dongholab.graphql.domain.account.AuthLoginModel
 import com.dongholab.graphql.domain.account.AuthReqModel
 import com.dongholab.graphql.entity.User
 import com.dongholab.graphql.repository.jpa.UserRepository
@@ -25,7 +25,7 @@ class UserService {
         return userRxRepository.findById(id)
     }
 
-    fun getUser(authLoginModel: AuthBase): Mono<User> {
+    fun getUser(authLoginModel: AuthLoginModel): Mono<User> {
         return userRxRepository.findById(authLoginModel.id)
     }
 
